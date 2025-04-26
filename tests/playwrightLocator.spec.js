@@ -13,11 +13,11 @@ test( 'Playwright Specific Locator' , async ( {page} ) => {
     let imgLocator2 = page.getByTitle("naveenopencart");
     let password = page.getByPlaceholder("Password");
 
-    await firstNameTxt.fill("Salmakn");
-    await lastNameTxt.fill("Khaan");
+    await firstNameTxt.fill("Salakn");
+    await lastNameTxt.fill("Khn");
     await personal.isVisible();
-    await email.fill("abwsgds@gmail.com");
-    await phoneNum.fill("123252318");
+    await email.fill("abwsgdfs@gmail.com");
+    await phoneNum.fill("123282318");
     await password.first().fill("1234");
     await password.last().fill("1234")
     await imgLocator1.isVisible();
