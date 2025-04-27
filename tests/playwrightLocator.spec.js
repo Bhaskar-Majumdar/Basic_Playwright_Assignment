@@ -1,43 +1,71 @@
 import { test, expect } from '@playwright/test';
 
-test( 'Playwright Specific Locator' , async ( {page} ) => {
+import { generateRandomNumber } from "../Utils/utils.js"
+import { faker } from '@faker-js/faker';
 
-    await page.goto("opencart/index.php?route=account/register");
+test( 'Registration Page' , async ( {page} ) => {
 
-    let firstNameTxt = page.getByRole( "textbox" , { name : "* First Name" } );
-    let lastNameTxt = page.getByRole( "textbox" , { name : "* Last Name" } );
-    let personal = page.getByText("Your Personal Details");
-    let email = page.getByLabel("E-Mail");
-    let phoneNum = page.getByPlaceholder("Telephone");
-    let imgLocator1 = page.getByAltText("naveenopencart");
-    let imgLocator2 = page.getByTitle("naveenopencart");
-    let password = page.getByPlaceholder("Password");
+    await page.goto("https://automationexercise.com/login");
 
-    await firstNameTxt.fill("Salaskn");
-    await lastNameTxt.fill("Khnaa");
-    await personal.isVisible();
-    await email.fill("abwsdgdfs@gmail.com");
-    await phoneNum.fill("123282318");
-    await password.first().fill("1234");
-    await password.last().fill("1234")
-    await imgLocator1.isVisible();
-    await imgLocator2.isVisible();
+    const signupForm = page.locator('form').filter({ hasText: 'New User Signup!' });
 
-    await page.getByRole("checkbox").click();
-    await page.getByRole("button" , {name : "Continue"}).click();
+    await page.getByPlaceholder("Name").fill(faker.person.firstName());
+    await page.locator('form').filter({ hasText: 'Signup' }).getByPlaceholder('Email Address').fill(faker.internet.email());
 
-    //Assertion Type 1
-    let confirmMsgTxt = await page.locator("h1").textContent();
-    expect(confirmMsgTxt).toBe("Your Account Has Been Created!");
-    expect(confirmMsgTxt).toContain("Created!");
+    await page.getByRole("button" , {name : "Signup"}).click();
 
-    //Assertion Type 2
-    let confirmMsg =  page.locator("h1");
-    expect(confirmMsg).toHaveText("Your Account Has Been Created!");
-    expect(confirmMsg).toContainText("Created!");
 
-    await page.pause();
+    await page.locator("#uniform-id_gender1").click();
+    await page.locator("#password"). fill("12345");
 
+    await page.getByRole("combobox").nth(0).selectOption("12");
+    await page.getByRole("combobox").nth(1).selectOption("December");
+    await page.getByRole("combobox").nth(2).selectOption("2002");
+
+    await page.locator("#newsletter").click();
+
+    await page.locator("#first_name").fill("Rakib");
+    await page.locator("#last_name").fill("Khan");
+    await page.locator("#company").fill("Road To SDET");
+
+    await page.locator("#address1").fill("Badda");
+    await page.locator("#address2").fill("Rampura");
+
+    await page.locator('#country').selectOption('Australia'); 
+
+    await page.locator('#state').fill('Sydney'); 
+    await page.locator('#city').fill('Sydney City');
+
+    await page.locator("#zipcode").fill( "09" + generateRandomNumber(1000,9999) );
+
+    await page.locator("#mobile_number").fill( "017" + generateRandomNumber(10000000,99999999) );
+
+    await page.getByText("Create Account").click();
+
+    const confirmMsg = await page.locator('[data-qa="account-created"]').textContent();
+    await expect(confirmMsg).toBe('Account Created!');
+    await expect(page.getByText('Congratulations! Your new account has been successfully created!')).toBeVisible();
+
+    await page.getByText("Continue").click();
+
+
+    await page.evaluate(
+        () => {
+     window.scrollBy(0, 650);
+     }
+    );
+
+    await page.locator(".choose a").first().click()
+
+    await page.locator("#quantity"). fill("3");
+
+    await page.getByText("Add to cart").click();
+
+    await expect(page.locator('#cartModal')).toContainText('Your product has been added to cart');
+
+    await page.getByText("View Cart").click();
+
+    await expect(page.locator('.cart_total_price')).toContainText('Rs. 1500');
 
 
 })

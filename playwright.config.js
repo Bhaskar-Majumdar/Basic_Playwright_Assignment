@@ -37,7 +37,7 @@ export default defineConfig({
     actionTimeout: 10000,
 
     /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: 'http://naveenautomationlabs.com/',
+    baseURL: 'https://automationexercise.com/',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     viewport: null, 
